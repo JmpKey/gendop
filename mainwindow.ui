@@ -48,6 +48,8 @@
     </property>
     <addaction name="action_year"/>
     <addaction name="action_group"/>
+    <addaction name="action_student"/>
+    <addaction name="action_teacher"/>
     <addaction name="action_comiss"/>
    </widget>
    <addaction name="menu"/>
@@ -65,7 +67,17 @@
   </action>
   <action name="action_group">
    <property name="text">
-    <string>Группа</string>
+    <string>Группу</string>
+   </property>
+  </action>
+  <action name="action_teacher">
+   <property name="text">
+    <string>Преподавателя</string>
+   </property>
+  </action>
+  <action name="action_student">
+   <property name="text">
+    <string>Студента</string>
    </property>
   </action>
  </widget>

@@ -2,11 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtSql>
 #include <QMessageBox>
 
-#include <dialogyear.h>
-#include <dialoggroup.h>
+// win zone
+#include "dialogyear.h"
+#include "dialoggroup.h"
+#include "dialogteacher.h"
+
+// module zone
+#include "databasemanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,29 +29,28 @@ public:
 private slots:
     void on_action_year_triggered();
     void on_action_group_triggered();
+    void on_action_teacher_triggered();
 
     // user slots:
     void onOpenDialogYear();
     void receiveDataYear(const QString& year);
     void onOpenDialogGroup();
     void receiveDataGroup(const QString& year, const QString& group);
-
-
+    void onOpenDialogTeacher();
+    void receiveDataTeacher(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr);
 
 private:
     Ui::MainWindow *ui;
     QWidget* widget;
     QSqlQueryModel* model;
+    DataBaseManager* db_manager;
     QSqlDatabase db;
     bool flagd = false;
 
     void db_init();
     void show_model();
     void clear_model();
-    void clear_all_elem_model();
     void show_message(const QString& text);
-    void add_year_db_w(const QString& year);
-    void add_group_db_w(const QString& year, const QString& group_name);
 
 };
 #endif // MAINWINDOW_H
