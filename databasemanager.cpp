@@ -19,7 +19,7 @@ QSqlQueryModel* DataBaseManager::getStudentsModel() {
         "FROM students s "
         "INNER JOIN last_groups lg ON s.students_id_last_group = lg.id_last_group "
         "INNER JOIN year y ON lg.group_year = y.id_year "
-        "INNER JOIN teachers t ON s.students_id_prep = t.id_prep;", db); // db передаётся в запрос
+        "INNER JOIN teachers t ON s.students_id_prep = t.id_prep;", db);
 
     if (model->lastError().isValid()) {
         // Обработка ошибки - лучше выбросить исключение или вернуть nullptr, а не закрывать базу данных здесь
