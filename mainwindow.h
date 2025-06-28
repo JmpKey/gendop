@@ -8,6 +8,9 @@
 #include "dialogyear.h"
 #include "dialoggroup.h"
 #include "dialogteacher.h"
+#include "dialogstudent.h"
+#include "dialogchosegroup.h"
+#include "dialogchoseteacher.h"
 
 // module zone
 #include "databasemanager.h"
@@ -30,6 +33,7 @@ private slots:
     void on_action_year_triggered();
     void on_action_group_triggered();
     void on_action_teacher_triggered();
+    void on_action_student_triggered();
 
     // user slots:
     void onOpenDialogYear();
@@ -38,6 +42,10 @@ private slots:
     void receiveDataGroup(const QString& year, const QString& group);
     void onOpenDialogTeacher();
     void receiveDataTeacher(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr);
+    void onOpenDialogStudent();
+    void receiveDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment);
+    void receiveDataChoseGroup(const QString& id_c_group);
+    void receiveDataChoseTeacher(const QString& id_c_teacher);
 
 private:
     Ui::MainWindow *ui;

@@ -188,3 +188,61 @@ void DataBaseManager::add_teacher_db_w(const QString& fio_t, const QString& dolz
 
     qDebug() << "Successfully added teacher:" << fio_t;
 }
+
+QStringList DataBaseManager::getLastGroups() {
+    QStringList result;
+
+    if (!db.isOpen()) {
+        qWarning() << "Database is not open!";
+        return result;
+    }
+
+    QSqlQuery query("SELECT id_last_group, group_name FROM last_groups");
+
+    if (!query.exec()) {
+        qWarning() << "Query execution failed:" << query.lastError().text();
+        return result;
+    }
+
+    while (query.next()) {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        result << QString("%1 %2").arg(id).arg(name);
+    }
+
+    return result;
+}
+
+QStringList DataBaseManager::getTeacher() {
+    QStringList result;
+
+    if (!db.isOpen()) {
+        qWarning() << "Database is not open!";
+        return result;
+    }
+
+    QSqlQuery query("SELECT id_prep, fio FROM teachers");
+
+    if (!query.exec()) {
+        qWarning() << "Query execution failed:" << query.lastError().text();
+        return result;
+    }
+
+    while (query.next()) {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        result << QString("%1 %2").arg(id).arg(name);
+    }
+
+    return result;
+}
+
+void DataBaseManager::set_id_c_group(const QString& _id_c_group) { id_c_group = _id_c_group; }
+
+void DataBaseManager::set_id_c_teacher(const QString& _id_c_teacher) { id_c_teacher = _id_c_teacher; }
+
+void DataBaseManager::add_student_db_w(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment)
+{
+    // добавить запрос сохранения студентов на основе данных которые вернули окна id студента и преподавателя
+}
+

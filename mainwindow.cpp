@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->action_year, &QAction::triggered, this, &MainWindow::onOpenDialogYear);
     connect(ui->action_group, &QAction::triggered, this, &MainWindow::onOpenDialogGroup);
     connect(ui->action_teacher, &QAction::triggered, this, &MainWindow::onOpenDialogTeacher);
+    connect(ui->action_student, &QAction::triggered, this, &MainWindow::onOpenDialogStudent);
 
     db_init();
 }
@@ -82,9 +83,6 @@ void MainWindow::clear_model() {
     }
 }
 
-
-//QSqlDatabase MainWindow::getDatabase() const { return db; }
-
 void MainWindow::on_action_year_triggered() {}
 
 void MainWindow::onOpenDialogYear() {
@@ -135,3 +133,40 @@ void MainWindow::receiveDataTeacher(const QString& fio_t, const QString& dolznos
     if(!flagd) { flagd = true; return; }
     db_manager->add_teacher_db_w(fio_t, dolznost_t, dolznost_ts, fio_tpr);
 }
+
+void MainWindow::on_action_student_triggered() {}
+
+void MainWindow::onOpenDialogStudent() {
+    // тут должно вызываться окно с опросом выбранной группы
+    DialogChoseGroup win_chose_g(db_manager->getLastGroups(), this);
+    connect(&win_chose_g, &DialogChoseGroup::sendDataChoseGroup, this, &MainWindow::receiveDataChoseGroup);
+    win_chose_g.exec();
+
+    DialogChoseTeacher win_chose_t(db_manager->getTeacher(), this);
+    connect(&win_chose_t, &DialogChoseTeacher::sendDataChoseTeacher, this, &MainWindow::receiveDataChoseTeacher);
+    win_chose_t.exec();
+
+    DialogStudent win_student(this);
+    connect(&win_student, &DialogStudent::sendDataStudent, this, &MainWindow::receiveDataStudent);
+    win_student.exec();
+    flagd = false;
+}
+
+void MainWindow::receiveDataChoseGroup(const QString& id_c_group) {
+    // тут id выбранной группы передаётся в db_manager для связывания
+    db_manager->set_id_c_group(id_c_group);
+}
+
+void MainWindow::receiveDataChoseTeacher(const QString& id_c_teacher) {
+    // тут id выбранного студента передаётся в db_manager для связывания
+    db_manager->set_id_c_teacher(id_c_teacher);
+}
+
+void MainWindow::receiveDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment)
+{
+    if(!flagd) { flagd = true; return; }
+
+
+    //db_manager->add_teacher_db_w(fio_t, dolznost_t, dolznost_ts, fio_tpr);
+}
+

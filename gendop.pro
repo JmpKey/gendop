@@ -10,7 +10,10 @@ CONFIG += c++17
 
 SOURCES += \
     databasemanager.cpp \
+    dialogchosegroup.cpp \
+    dialogchoseteacher.cpp \
     dialoggroup.cpp \
+    dialogstudent.cpp \
     dialogteacher.cpp \
     dialogyear.cpp \
     main.cpp \
@@ -18,13 +21,19 @@ SOURCES += \
 
 HEADERS += \
     databasemanager.h \
+    dialogchosegroup.h \
+    dialogchoseteacher.h \
     dialoggroup.h \
+    dialogstudent.h \
     dialogteacher.h \
     dialogyear.h \
     mainwindow.h
 
 FORMS += \
+    dialogchosegroup.ui \
+    dialogchoseteacher.ui \
     dialoggroup.ui \
+    dialogstudent.ui \
     dialogteacher.ui \
     dialogyear.ui \
     mainwindow.ui
