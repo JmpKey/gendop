@@ -165,8 +165,6 @@ void MainWindow::receiveDataChoseTeacher(const QString& id_c_teacher) {
 void MainWindow::receiveDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment)
 {
     if(!flagd) { flagd = true; return; }
-
-
-    //db_manager->add_teacher_db_w(fio_t, dolznost_t, dolznost_ts, fio_tpr);
+    db_manager->add_student_db_w(fio_s, fio_rod, orig_1, orig_2, tema, dopusk, comment);
 }
 

@@ -20,6 +20,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    adaptation.h \
     databasemanager.h \
     dialogchosegroup.h \
     dialogchoseteacher.h \

@@ -4,16 +4,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 
-// win zone
-#include "dialogyear.h"
-#include "dialoggroup.h"
-#include "dialogteacher.h"
-#include "dialogstudent.h"
-#include "dialogchosegroup.h"
-#include "dialogchoseteacher.h"
-
-// module zone
-#include "databasemanager.h"
+#include <adaptation.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

@@ -19,7 +19,7 @@ QSqlQueryModel* DataBaseManager::getStudentsModel() {
         "FROM students s "
         "INNER JOIN last_groups lg ON s.students_id_last_group = lg.id_last_group "
         "INNER JOIN year y ON lg.group_year = y.id_year "
-        "INNER JOIN teachers t ON s.students_id_prep = t.id_prep;", db);
+        "INNER JOIN teachers t ON s.students_id_prep = t.id_prep;", db); // db передаётся в запрос
 
     if (model->lastError().isValid()) {
         // Обработка ошибки - лучше выбросить исключение или вернуть nullptr, а не закрывать базу данных здесь
@@ -243,6 +243,56 @@ void DataBaseManager::set_id_c_teacher(const QString& _id_c_teacher) { id_c_teac
 
 void DataBaseManager::add_student_db_w(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment)
 {
-    // добавить запрос сохранения студентов на основе данных которые вернули окна id студента и преподавателя
+    if (!db.isOpen()) {
+        qDebug() << "Database is not open!";
+        return;
+    }
+
+    QSqlQuery query(db);
+
+    // 1. Начинаем транзакцию
+    db.transaction();
+
+    // 2. Получаем максимальный ID из таблицы.
+    if (!query.exec("SELECT MAX(id_student) FROM students")) {
+        qDebug() << "Error getting max id:" << query.lastError().text();
+        db.rollback();  // Откатываем транзакцию в случае ошибки
+        return;
+    }
+
+    int nextId = 0; // По умолчанию ID будет 0, если таблица пуста
+    if (query.next()) {
+        // Получаем максимальный ID из результата запроса
+        nextId = query.value(0).toInt() + 1; // Увеличиваем на 1 для следующего ID
+    }
+
+    // 3. Если id_year получен успешно, добавляем запись в last_groups.
+    // INSERT INTO teachers (id_prep, fio, dolznost, dolznost_sokr, fio_dolz_pri) VALUES (:id_prep, :fio, :dolznost, :dolznost_sokr, :fio_dolz_pri)
+    query.prepare("INSERT INTO students (id_student, fio, fio_rod, origin1, origin2, tema, dopusk, comment, students_id_last_group, students_id_prep) VALUES (:id_student, :fio, :fio_rod, :origin1, :origin2, :tema, :dopusk, :comment, :students_id_last_group, :students_id_prep)");
+    query.bindValue(":id_student", nextId);
+    query.bindValue(":fio", fio_s);
+    query.bindValue(":fio_rod", fio_rod);
+    query.bindValue(":origin1", orig_1);
+    query.bindValue(":origin2", orig_2);
+    query.bindValue(":tema", tema);
+    query.bindValue(":dopusk", dopusk);
+    query.bindValue(":comment", comment);
+    query.bindValue(":students_id_last_group", id_c_group);
+    query.bindValue(":students_id_prep", id_c_teacher);
+
+    if (!query.exec()) {
+        qDebug() << "Error inserting into student:" << query.lastError().text();
+        db.rollback();
+        return;
+    }
+
+    // 4. Подтверждаем транзакцию
+    if (!db.commit()) {
+        qDebug() << "Error committing transaction:" << db.lastError().text();
+        db.rollback();
+        return;
+    }
+
+    qDebug() << "Successfully added student:" << fio_s;
 }
 
