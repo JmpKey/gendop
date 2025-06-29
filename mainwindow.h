@@ -41,7 +41,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QWidget* widget;
-    QSqlQueryModel* model;
+    QSqlQueryModel* model = nullptr;
     DataBaseManager* db_manager;
     QSqlDatabase db;
     bool flagd = false;
