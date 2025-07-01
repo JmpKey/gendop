@@ -25,6 +25,9 @@ private slots:
     void on_action_group_triggered();
     void on_action_teacher_triggered();
     void on_action_student_triggered();
+    void on_action_del_obj_triggered();
+    void on_action_comiss_triggered();
+    void on_action_search_triggered();
 
     // user slots:
     void onOpenDialogYear();
@@ -37,6 +40,12 @@ private slots:
     void receiveDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment);
     void receiveDataChoseGroup(const QString& id_c_group);
     void receiveDataChoseTeacher(const QString& id_c_teacher);
+    void onOpenDialogComiss();
+    void receiveDataChoseComiss(const QString& id_year, const QString& id_ruk, const QString& podl);
+    void onOpenDialogSearch();
+    void receiveDataSearch(const QString& search);
+
+    void on_action_sr_math_triggered();
 
 private:
     Ui::MainWindow *ui;

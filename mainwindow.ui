@@ -52,7 +52,17 @@
     <addaction name="action_teacher"/>
     <addaction name="action_comiss"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Выполнить</string>
+    </property>
+    <addaction name="action_gendoc"/>
+    <addaction name="action_del_obj"/>
+    <addaction name="action_search"/>
+    <addaction name="action_sr_math"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_year">
@@ -78,6 +88,26 @@
   <action name="action_student">
    <property name="text">
     <string>Студента</string>
+   </property>
+  </action>
+  <action name="action_gendoc">
+   <property name="text">
+    <string>Создать документ</string>
+   </property>
+  </action>
+  <action name="action_del_obj">
+   <property name="text">
+    <string>Удалть</string>
+   </property>
+  </action>
+  <action name="action_search">
+   <property name="text">
+    <string>Поиск</string>
+   </property>
+  </action>
+  <action name="action_sr_math">
+   <property name="text">
+    <string>Среднее по группе</string>
    </property>
   </action>
  </widget>

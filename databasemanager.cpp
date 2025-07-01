@@ -296,3 +296,249 @@ void DataBaseManager::add_student_db_w(const QString& fio_s, const QString& fio_
     qDebug() << "Successfully added student:" << fio_s;
 }
 
+QStringList DataBaseManager::getYear() {
+    QStringList result;
+
+    if (!db.isOpen()) {
+        qWarning() << "Database is not open!";
+        return result;
+    }
+
+    QSqlQuery query("SELECT id_year, year FROM year");
+
+    if (!query.exec()) {
+        qWarning() << "Query execution failed:" << query.lastError().text();
+        return result;
+    }
+
+    while (query.next()) {
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        result << QString("%1 %2").arg(id).arg(name);
+    }
+
+    return result;
+}
+
+void DataBaseManager::add_comiss_db_w(const QString& id_year, const QString& id_ruk, const QString& podl) {
+    if (!db.isOpen()) {
+        qDebug() << "Database is not open!";
+        return;
+    }
+
+    QSqlQuery query(db);
+
+    // 1. Начинаем транзакцию
+    db.transaction();
+
+    // тут год и руководитель с остальными должны вызваться
+    QString fio_ruk = "";
+    QString dolznost_ruk = "";
+
+    // Подготовка SQL-запроса
+    query.prepare("SELECT fio, dolznost FROM teachers WHERE id_prep = :id");
+    query.bindValue(":id", id_ruk);
+
+    if (!query.exec()) {
+        qDebug() << "Ошибка выполнения запроса:" << query.lastError().text();
+    }
+
+    // Получение результата
+    if (query.next()) {
+        fio_ruk = query.value(0).toString(); // Получаем значение поля fio
+        dolznost_ruk = query.value(1).toString(); // Получаем значение поля dolznost
+    } else {
+        qDebug() << "Запись не найдена для id:" << id_ruk;
+    }
+
+    qDebug() << "Запись dolznost_ruk:" << dolznost_ruk;
+
+    QString com1; // первый член комисси
+    QString com2; // второй член комисси
+
+    if(dolznost_ruk == "заведующий кафедрой ИС") { com1 = findByDolznost("доцент кафедры ИС"); com2 = findByDolznost("старший преподаватель кафедры ИС"); }
+    if(dolznost_ruk == "старший преподаватель кафедры ИС") { com1 = findByDolznost("заведующий кафедрой ИС"); com2 = findByDolznost("доцент кафедры ИС"); }
+    if(dolznost_ruk == "доцент кафедры ИС") { com1 = findByDolznost("заведующий кафедрой ИС"); com2 = findByDolznost("старший преподаватель кафедры ИС"); }
+    else {}
+
+    // тут когда мы собрали всех тороих можно записывать по порядку в БД: com1 com2 и руководитель
+
+    // 2. Получаем максимальный ID из таблицы.
+    if (!query.exec("SELECT MAX(id_comiss) FROM comission")) {
+        qDebug() << "Error getting max id:" << query.lastError().text();
+        db.rollback();  // Откатываем транзакцию в случае ошибки
+        return;
+    }
+
+    int nextId = 0; // По умолчанию ID будет 0, если таблица пуста
+    if (query.next()) {
+        // Получаем максимальный ID из результата запроса
+        nextId = query.value(0).toInt() + 1; // Увеличиваем на 1 для следующего ID
+    }
+
+    // 3. Вставляем новую запись с явно указанным ID.
+    query.prepare("INSERT INTO comission (id_comiss, predsedatel, post_g_comiss, vari_g_comissi, podl_g_comiss, comission_id_year) VALUES (:id_comiss, :predsedatel, :post_g_comiss, :vari_g_comissi, :podl_g_comiss, :comission_id_year)");
+    query.bindValue(":id_comiss", nextId);
+    query.bindValue(":predsedatel", com1);
+    query.bindValue(":post_g_comiss", com2);
+    query.bindValue(":vari_g_comissi", fio_ruk);
+    query.bindValue(":podl_g_comiss", podl);
+    query.bindValue(":comission_id_year", id_year);
+
+    if (!query.exec()) {
+        qDebug() << "Error inserting comission:" << nextId << query.lastError().text();
+        db.rollback();  // Откатываем транзакцию в случае ошибки
+        return;
+    }
+
+    // 4. Подтверждаем транзакцию
+    if (!db.commit()) {
+        qDebug() << "Error committing transaction:" << db.lastError().text();
+        db.rollback(); // Откатываем, если commit не удался (очень редко)
+        return;
+    }
+}
+
+QString DataBaseManager::findByDolznost(const QString& dolznost) {
+    // в этот метод из условия перенаправляем нужную должность. И в условии получаем
+    QString fio;
+
+    QSqlQuery query(db);
+
+    // Используем параметризованный запрос для предотвращения SQL-инъекций
+    query.prepare("SELECT fio FROM teachers WHERE dolznost = :dolznost");
+    query.bindValue(":dolznost", dolznost);
+
+    if (!query.exec()) {
+        qDebug() << "Ошибка выполнения запроса:" << query.lastError().text();
+        return fio; // Возвращаем пустую строку в случае ошибки
+    }
+
+    while (query.next()) {
+        fio = query.value(0).toString(); // Получаем ФИО
+    }    
+
+    return fio;
+}
+
+void DataBaseManager::delete_student_db_w(const QString& id_student) {
+    if (!db.isOpen()) {
+        qDebug() << "Ошибка: База данных не открыта!";
+        return;
+    }
+
+    // Начинаем транзакцию
+    if (!db.transaction()) {
+        qDebug() << "Ошибка при начале транзакции:" << db.lastError().text();
+        return;
+    }
+
+    // Создаем запрос
+    QSqlQuery query;
+    query.prepare("DELETE FROM students WHERE id_student = :id_student");
+    query.bindValue(":id_student", id_student); // Привязываем значение параметра
+
+    // Выполняем запрос
+    if (!query.exec()) {
+        qDebug() << "Ошибка при удалении студента:" << query.lastError().text();
+        // Откатываем транзакцию в случае ошибки
+        db.rollback();
+        return;
+    }
+
+    // Подтверждаем транзакцию
+    if (!db.commit()) {
+        qDebug() << "Ошибка при подтверждении транзакции:" << db.lastError().text();
+        return;
+    }
+
+    qDebug() << "Студент с id" << id_student << "успешно удален.";
+}
+
+QSqlQueryModel* DataBaseManager::searchStudents(const QString& searchString) {
+    QSqlQueryModel* model = new QSqlQueryModel();
+
+    // Подготовка SQL-запроса с использованием LIKE для поиска
+    QString queryStr = QString(
+        "SELECT "
+        " s.id_student, "
+        " s.fio AS ФИО_студента, "
+        " lg.group_name AS Группа, "
+        " y.year AS Год, "
+        " t.fio AS ФИО_преподавателя, "
+        " s.origin1, "
+        " s.origin2, "
+        " s.tema, "
+        " s.dopusk, "
+        " s.comment "
+        "FROM students s "
+        "INNER JOIN last_groups lg ON s.students_id_last_group = lg.id_last_group "
+        "INNER JOIN year y ON lg.group_year = y.id_year "
+        "INNER JOIN teachers t ON s.students_id_prep = t.id_prep "
+        "WHERE s.fio LIKE :searchString OR lg.group_name LIKE :searchString OR t.fio LIKE :searchString"
+        );
+
+    QSqlQuery query;
+    query.prepare(queryStr);
+    query.bindValue(":searchString", "%" + searchString + "%"); // Используем подстановочный знак для поиска
+
+    // Выполнение запроса
+    if (!query.exec()) {
+        qWarning() << "Ошибка выполнения запроса:" << query.lastError().text();
+        delete model; // Удаляем модель в случае ошибки
+        return nullptr; // Возвращаем nullptr, указывающий на ошибку
+    }
+
+    // Устанавливаем результаты запроса в модель
+    model->setQuery(std::move(query)); // Используем std::move для передачи запроса
+
+    if (model->lastError().isValid()) {
+        qWarning() << "Ошибка в модели:" << model->lastError().text();
+        delete model; // Удаляем модель в случае ошибки
+        return nullptr; // Возвращаем nullptr, указывающий на ошибку
+    }
+
+    return model; // Возвращаем модель с результатами поиска
+}
+
+QString DataBaseManager::calculateAverages() {
+    QSqlQuery query;
+    QString retSr;
+
+    // SQL-запрос для вычисления средних значений и получения имени группы
+    QString sql = R"(
+        SELECT
+            g.id_last_group,
+            g.group_name,
+            AVG(CAST(s.origin1 AS FLOAT)) AS average_origin1,
+            AVG(CAST(s.origin2 AS FLOAT)) AS average_origin2
+        FROM
+            students s
+        JOIN
+            last_groups g ON s.students_id_last_group = g.id_last_group
+        GROUP BY
+            g.id_last_group, g.group_name;
+    )";
+
+    if (!query.exec(sql)) {
+        qDebug() << "Ошибка выполнения запроса:" << query.lastError().text();
+        return "";
+    }
+
+    // Обработка результатов
+    while (query.next()) {
+        QVariant groupId = query.value(0);
+        QVariant groupName = query.value(1);
+        QVariant averageOrigin1 = query.value(2);
+        QVariant averageOrigin2 = query.value(3);
+
+        qDebug() << "Группа ID:" << groupId.toString()
+                 << "Имя группы:" << groupName.toString()
+                 << "Среднее origin1:" << averageOrigin1.toDouble()
+                 << "Среднее origin2:" << averageOrigin2.toDouble();
+
+        retSr += "Группа " + groupName.toString() + " " + "Среднее origin1: " + averageOrigin1.toString() + " " + "Среднее origin2: " + averageOrigin2.toString() + "\n";
+    }
+
+    return retSr;
+}

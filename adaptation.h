@@ -11,6 +11,8 @@
     #include "dialogstudent.h"
     #include "dialogchosegroup.h"
     #include "dialogchoseteacher.h"
+    #include "dialogchosecomis.h"
+    #include "dialogsearch.h"
 
     // module zone
     #include "databasemanager.h"

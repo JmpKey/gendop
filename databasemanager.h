@@ -23,9 +23,14 @@ public:
     void add_student_db_w(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment);
     QStringList getLastGroups();
     QStringList getTeacher();
+    QStringList getYear();
     void set_id_c_group(const QString& _id_c_group);
     void set_id_c_teacher(const QString& _id_c_teacher);
-
+    void add_comiss_db_w(const QString& id_year, const QString& id_ruk, const QString& podl);
+    QString findByDolznost(const QString& dolznost);
+    void delete_student_db_w(const QString& id_student);
+    QSqlQueryModel* searchStudents(const QString& searchString);
+    QString calculateAverages();
 };
 
 #endif // DATABASEMANAGER_H
