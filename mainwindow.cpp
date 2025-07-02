@@ -210,7 +210,10 @@ void MainWindow::onOpenDialogComiss() {
 
 void MainWindow::receiveDataChoseComiss(const QString& id_year, const QString& id_ruk, const QString& podl) {
     if(!flagd) { flagd = true; return; }
-    db_manager->add_comiss_db_w(id_year, id_ruk, podl);
+
+    FConfigManager configReader(QDir::currentPath() + QString("/conf/teachers.conf"));
+    QVector<QString> configValues = configReader.readConfig();
+    db_manager->add_comiss_db_w(id_year, id_ruk, podl, configValues[0], configValues[1], configValues[2]);
 }
 
 void MainWindow::on_action_search_triggered() {}

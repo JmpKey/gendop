@@ -18,6 +18,7 @@ SOURCES += \
     dialogstudent.cpp \
     dialogteacher.cpp \
     dialogyear.cpp \
+    fconfigmanager.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -32,6 +33,7 @@ HEADERS += \
     dialogstudent.h \
     dialogteacher.h \
     dialogyear.h \
+    fconfigmanager.h \
     mainwindow.h
 
 FORMS += \

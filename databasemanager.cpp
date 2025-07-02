@@ -320,7 +320,7 @@ QStringList DataBaseManager::getYear() {
     return result;
 }
 
-void DataBaseManager::add_comiss_db_w(const QString& id_year, const QString& id_ruk, const QString& podl) {
+void DataBaseManager::add_comiss_db_w(const QString& id_year, const QString& id_ruk, const QString& podl, const QString& com_chief, const QString& com_senior, const QString& com_teacher) {
     if (!db.isOpen()) {
         qDebug() << "Database is not open!";
         return;
@@ -356,9 +356,9 @@ void DataBaseManager::add_comiss_db_w(const QString& id_year, const QString& id_
     QString com1; // первый член комисси
     QString com2; // второй член комисси
 
-    if(dolznost_ruk == "заведующий кафедрой ИС") { com1 = findByDolznost("доцент кафедры ИС"); com2 = findByDolznost("старший преподаватель кафедры ИС"); }
-    if(dolznost_ruk == "старший преподаватель кафедры ИС") { com1 = findByDolznost("заведующий кафедрой ИС"); com2 = findByDolznost("доцент кафедры ИС"); }
-    if(dolznost_ruk == "доцент кафедры ИС") { com1 = findByDolznost("заведующий кафедрой ИС"); com2 = findByDolznost("старший преподаватель кафедры ИС"); }
+    if(dolznost_ruk == com_chief) { com1 = findByDolznost(com_teacher); com2 = findByDolznost(com_senior); }
+    if(dolznost_ruk == com_senior) { com1 = findByDolznost(com_chief); com2 = findByDolznost(com_teacher); }
+    if(dolznost_ruk == com_teacher) { com1 = findByDolznost(com_chief); com2 = findByDolznost(com_senior); }
     else {}
 
     // тут когда мы собрали всех тороих можно записывать по порядку в БД: com1 com2 и руководитель
