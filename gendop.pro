@@ -18,6 +18,7 @@ SOURCES += \
     dialogstudent.cpp \
     dialogteacher.cpp \
     dialogyear.cpp \
+    docxmanager.cpp \
     fconfigmanager.cpp \
     main.cpp \
     mainwindow.cpp
@@ -33,6 +34,7 @@ HEADERS += \
     dialogstudent.h \
     dialogteacher.h \
     dialogyear.h \
+    docxmanager.h \
     fconfigmanager.h \
     mainwindow.h
 
@@ -46,6 +48,9 @@ FORMS += \
     dialogteacher.ui \
     dialogyear.ui \
     mainwindow.ui
+
+INCLUDEPATH += $$PWD/lib/include/libxml2
+LIBS += -L$$PWD/lib -lxml2
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

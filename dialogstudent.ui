@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>344</width>
-    <height>391</height>
+    <height>462</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -165,7 +165,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>260</y>
+     <y>340</y>
      <width>131</width>
      <height>16</height>
     </rect>
@@ -178,7 +178,7 @@
    <property name="geometry">
     <rect>
      <x>250</x>
-     <y>350</y>
+     <y>420</y>
      <width>80</width>
      <height>23</height>
     </rect>
@@ -191,9 +191,55 @@
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>260</y>
+     <y>340</y>
      <width>191</width>
      <height>70</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lab_nzakl">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>260</y>
+     <width>131</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Номер заключения</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="le_nzakl">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>260</y>
+     <width>191</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lab_date_zakl">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>300</y>
+     <width>131</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Дата заключения</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="le_date_zakl">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>300</y>
+     <width>191</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

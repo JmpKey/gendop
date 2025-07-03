@@ -24,7 +24,7 @@ void DialogYear::on_pb_year_clicked()
         if (ok)
         {
             if(year >= 1990 && year <= 3000) {
-                emit sendDataYear(QString::number(year));
+                emit sendDataYear(QString::number(year), ui->le_years->text());
                 accept();
             }
         } else {

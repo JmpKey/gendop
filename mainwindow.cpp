@@ -92,10 +92,10 @@ void MainWindow::onOpenDialogYear() {
     flagd = false;
 }
 
-void MainWindow::receiveDataYear(const QString& year)
+void MainWindow::receiveDataYear(const QString& year, const QString& years)
 {
     if(!flagd) { flagd = true; return; }
-    db_manager->add_year_db_w(year);
+    db_manager->add_year_db_w(year, years);
 }
 
 void MainWindow::show_message(const QString& text) {
@@ -122,7 +122,10 @@ void MainWindow::receiveDataGroup(const QString& year, const QString& group)
 void MainWindow::on_action_teacher_triggered() {}
 
 void MainWindow::onOpenDialogTeacher() {
-    DialogTeacher win_teacher(this);
+    FConfigManager configReader(QDir::currentPath() + QString("/conf/teachers.conf"));
+    QVector<QString> configValues = configReader.readConfig();
+
+    DialogTeacher win_teacher(configValues[0], configValues[1], configValues[2], this);
     connect(&win_teacher, &DialogTeacher::sendDataTeacher, this, &MainWindow::receiveDataTeacher);
     win_teacher.exec();
     flagd = false;
@@ -131,7 +134,8 @@ void MainWindow::onOpenDialogTeacher() {
 void MainWindow::receiveDataTeacher(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr)
 {
     if(!flagd) { flagd = true; return; }
-    db_manager->add_teacher_db_w(fio_t, dolznost_t, dolznost_ts, fio_tpr);
+    QString curDate = QDateTime::currentDateTime().toString("yyyy-MM-dd");
+    db_manager->add_teacher_db_w(fio_t, dolznost_t, dolznost_ts, fio_tpr, curDate);
 }
 
 void MainWindow::on_action_student_triggered() {}
@@ -162,10 +166,10 @@ void MainWindow::receiveDataChoseTeacher(const QString& id_c_teacher) {
     db_manager->set_id_c_teacher(id_c_teacher);
 }
 
-void MainWindow::receiveDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment)
+void MainWindow::receiveDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment, const QString& nzakl, const QString& date_zakl)
 {
     if(!flagd) { flagd = true; return; }
-    db_manager->add_student_db_w(fio_s, fio_rod, orig_1, orig_2, tema, dopusk, comment);
+    db_manager->add_student_db_w(fio_s, fio_rod, orig_1, orig_2, tema, dopusk, comment, nzakl, date_zakl);
 }
 
 void MainWindow::on_action_del_obj_triggered()

@@ -17,6 +17,7 @@
     // module zone
     #include "databasemanager.h"
     #include "fconfigmanager.h"
+    #include "docxmanager.h"
 
 #elif defined(_WIN32) || defined(_WIN64)
     // On WindowsNT

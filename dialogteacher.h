@@ -12,7 +12,7 @@ class DialogTeacher : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogTeacher(QWidget *parent = nullptr);
+    explicit DialogTeacher(const QString &dolzn1, const QString &dolzn2, const QString &dolzn3, QWidget *parent = nullptr);
     ~DialogTeacher();
 
 private slots:

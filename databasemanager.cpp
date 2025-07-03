@@ -32,7 +32,7 @@ QSqlQueryModel* DataBaseManager::getStudentsModel() {
     return model;
 }
 
-void DataBaseManager::add_year_db_w(const QString& year) {
+void DataBaseManager::add_year_db_w(const QString& year, const QString& years) {
     if (!db.isOpen()) {
         qDebug() << "Database is not open!";
         return;
@@ -57,9 +57,10 @@ void DataBaseManager::add_year_db_w(const QString& year) {
     }
 
     // 3. Вставляем новую запись с явно указанным ID.
-    query.prepare("INSERT INTO year (id_year, year) VALUES (:id_year, :year)");
+    query.prepare("INSERT INTO year (id_year, year, years) VALUES (:id_year, :year, :years)");
     query.bindValue(":id_year", nextId);
     query.bindValue(":year", year);
+    query.bindValue(":years", years);
 
     if (!query.exec()) {
         qDebug() << "Error inserting year:" << year << query.lastError().text();
@@ -140,7 +141,7 @@ void DataBaseManager::add_group_db_w(const QString& year, const QString& group_n
     qDebug() << "Successfully added group:" << group_name << "with year:" << year;
 }
 
-void DataBaseManager::add_teacher_db_w(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr) {
+void DataBaseManager::add_teacher_db_w(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr, QString curDate) {
     if (!db.isOpen()) {
         qDebug() << "Database is not open!";
         return;
@@ -166,12 +167,13 @@ void DataBaseManager::add_teacher_db_w(const QString& fio_t, const QString& dolz
 
     // 3. Если id_year получен успешно, добавляем запись в last_groups.
     // INSERT INTO teachers (id_prep, fio, dolznost, dolznost_sokr, fio_dolz_pri) VALUES (:id_prep, :fio, :dolznost, :dolznost_sokr, :fio_dolz_pri)
-    query.prepare("INSERT INTO teachers (id_prep, fio, dolznost, dolznost_sokr, fio_dolz_pri) VALUES (:id_prep, :fio, :dolznost, :dolznost_sokr, :fio_dolz_pri)");
+    query.prepare("INSERT INTO teachers (id_prep, fio, dolznost, dolznost_sokr, fio_dolz_pri, date) VALUES (:id_prep, :fio, :dolznost, :dolznost_sokr, :fio_dolz_pri, :date)");
     query.bindValue(":id_prep", nextId);
     query.bindValue(":fio", fio_t);
     query.bindValue(":dolznost", dolznost_t); // Используем полученный id_year
     query.bindValue(":dolznost_sokr", dolznost_ts);
     query.bindValue(":fio_dolz_pri", fio_tpr);
+    query.bindValue(":date", curDate);
 
     if (!query.exec()) {
         qDebug() << "Error inserting into teachers:" << query.lastError().text();
@@ -241,7 +243,7 @@ void DataBaseManager::set_id_c_group(const QString& _id_c_group) { id_c_group = 
 
 void DataBaseManager::set_id_c_teacher(const QString& _id_c_teacher) { id_c_teacher = _id_c_teacher; }
 
-void DataBaseManager::add_student_db_w(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment)
+void DataBaseManager::add_student_db_w(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment, const QString& nzakl, const QString& date_zakl)
 {
     if (!db.isOpen()) {
         qDebug() << "Database is not open!";
@@ -268,7 +270,7 @@ void DataBaseManager::add_student_db_w(const QString& fio_s, const QString& fio_
 
     // 3. Если id_year получен успешно, добавляем запись в last_groups.
     // INSERT INTO teachers (id_prep, fio, dolznost, dolznost_sokr, fio_dolz_pri) VALUES (:id_prep, :fio, :dolznost, :dolznost_sokr, :fio_dolz_pri)
-    query.prepare("INSERT INTO students (id_student, fio, fio_rod, origin1, origin2, tema, dopusk, comment, students_id_last_group, students_id_prep) VALUES (:id_student, :fio, :fio_rod, :origin1, :origin2, :tema, :dopusk, :comment, :students_id_last_group, :students_id_prep)");
+    query.prepare("INSERT INTO students (id_student, fio, fio_rod, origin1, origin2, tema, dopusk, comment, students_id_last_group, students_id_prep, nzakl, date_zakl) VALUES (:id_student, :fio, :fio_rod, :origin1, :origin2, :tema, :dopusk, :comment, :students_id_last_group, :students_id_prep, :nzakl, :date_zakl)");
     query.bindValue(":id_student", nextId);
     query.bindValue(":fio", fio_s);
     query.bindValue(":fio_rod", fio_rod);
@@ -279,6 +281,8 @@ void DataBaseManager::add_student_db_w(const QString& fio_s, const QString& fio_
     query.bindValue(":comment", comment);
     query.bindValue(":students_id_last_group", id_c_group);
     query.bindValue(":students_id_prep", id_c_teacher);
+    query.bindValue(":nzakl", nzakl);
+    query.bindValue(":date_zakl", date_zakl);
 
     if (!query.exec()) {
         qDebug() << "Error inserting into student:" << query.lastError().text();

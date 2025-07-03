@@ -19,7 +19,7 @@ private slots:
     void on_pb_student_clicked();
 
 signals:
-    void sendDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment);
+    void sendDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment, const QString& nzakl, const QString& date_zakl);
 
 private:
     Ui::DialogStudent *ui;

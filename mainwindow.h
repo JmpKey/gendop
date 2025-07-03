@@ -31,13 +31,13 @@ private slots:
 
     // user slots:
     void onOpenDialogYear();
-    void receiveDataYear(const QString& year);
+    void receiveDataYear(const QString& year, const QString& years);
     void onOpenDialogGroup();
     void receiveDataGroup(const QString& year, const QString& group);
     void onOpenDialogTeacher();
     void receiveDataTeacher(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr);
     void onOpenDialogStudent();
-    void receiveDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment);
+    void receiveDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment, const QString& nzakl, const QString& date_zakl);
     void receiveDataChoseGroup(const QString& id_c_group);
     void receiveDataChoseTeacher(const QString& id_c_teacher);
     void onOpenDialogComiss();

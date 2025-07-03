@@ -19,7 +19,7 @@ private slots:
     void on_pb_year_clicked();
 
 signals:
-    void sendDataYear(const QString& year);
+    void sendDataYear(const QString& year, const QString& years);
 
 private:
     Ui::DialogYear *ui;
