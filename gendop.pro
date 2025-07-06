@@ -49,9 +49,6 @@ FORMS += \
     dialogyear.ui \
     mainwindow.ui
 
-INCLUDEPATH += $$PWD/lib/include/libxml2
-LIBS += -L$$PWD/lib -lxml2
-
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

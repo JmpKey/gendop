@@ -19,7 +19,7 @@ public:
     QSqlQueryModel* getStudentsModel();
     void add_year_db_w(const QString& year, const QString& years);
     void add_group_db_w(const QString& year, const QString& group_name);
-    void add_teacher_db_w(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr, QString curDate);
+    void add_teacher_db_w(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr, QString curDate, const QString& dolznost_rod);
     void add_student_db_w(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment, const QString& nzakl, const QString& date_zakl);
     QStringList getLastGroups();
     QStringList getTeacher();
@@ -31,6 +31,11 @@ public:
     void delete_student_db_w(const QString& id_student);
     QSqlQueryModel* searchStudents(const QString& searchString);
     QString calculateAverages();
+    QVector<QString> getStudentData(const QString& studentId);
+    QVector<QString> getStudentEdit(const QVector<QString>& student);
+    QVector<QString> getComissionMembers(const QString& groupName);
+    QVector<QString> getTeacherInfo(const QString& fio);
+    QString getTeacherDolzn(const QString& fio);
 };
 
 #endif // DATABASEMANAGER_H

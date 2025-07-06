@@ -141,7 +141,7 @@ void DataBaseManager::add_group_db_w(const QString& year, const QString& group_n
     qDebug() << "Successfully added group:" << group_name << "with year:" << year;
 }
 
-void DataBaseManager::add_teacher_db_w(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr, QString curDate) {
+void DataBaseManager::add_teacher_db_w(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr, QString curDate, const QString& dolznost_rod) {
     if (!db.isOpen()) {
         qDebug() << "Database is not open!";
         return;
@@ -167,13 +167,14 @@ void DataBaseManager::add_teacher_db_w(const QString& fio_t, const QString& dolz
 
     // 3. Если id_year получен успешно, добавляем запись в last_groups.
     // INSERT INTO teachers (id_prep, fio, dolznost, dolznost_sokr, fio_dolz_pri) VALUES (:id_prep, :fio, :dolznost, :dolznost_sokr, :fio_dolz_pri)
-    query.prepare("INSERT INTO teachers (id_prep, fio, dolznost, dolznost_sokr, fio_dolz_pri, date) VALUES (:id_prep, :fio, :dolznost, :dolznost_sokr, :fio_dolz_pri, :date)");
+    query.prepare("INSERT INTO teachers (id_prep, fio, dolznost, dolznost_sokr, fio_dolz_pri, date, dolznost_rod) VALUES (:id_prep, :fio, :dolznost, :dolznost_sokr, :fio_dolz_pri, :date, :dolznost_rod)");
     query.bindValue(":id_prep", nextId);
     query.bindValue(":fio", fio_t);
     query.bindValue(":dolznost", dolznost_t); // Используем полученный id_year
     query.bindValue(":dolznost_sokr", dolznost_ts);
     query.bindValue(":fio_dolz_pri", fio_tpr);
     query.bindValue(":date", curDate);
+    query.bindValue(":dolznost_rod", dolznost_rod);
 
     if (!query.exec()) {
         qDebug() << "Error inserting into teachers:" << query.lastError().text();
@@ -545,4 +546,219 @@ QString DataBaseManager::calculateAverages() {
     }
 
     return retSr;
+}
+
+QVector<QString> DataBaseManager::getComissionMembers(const QString& groupName) {
+    QVector<QString> members;
+
+    if (!db.isOpen()) {
+        qDebug() << "Database is not open.";
+        return members; // Return an empty vector if the database is not open
+    }
+
+    QSqlQuery query(db);
+
+    // Construct the SQL query to retrieve the comission members based on the group name.
+    // First, find the year associated with the group name. Then, use that year's ID to
+    // find the corresponding comission members.
+
+    QString sqlQuery = QString("SELECT c.predsedatel, c.post_g_comiss, c.vari_g_comissi, c.podl_g_comiss "
+                               "FROM comission c "
+                               "JOIN year y ON c.comission_id_year = y.id_year "
+                               "JOIN last_groups lg ON y.id_year = lg.group_year "
+                               "WHERE lg.group_name = :groupName");
+
+
+    query.prepare(sqlQuery);
+    query.bindValue(":groupName", groupName);
+
+
+    if (!query.exec()) {
+        qDebug() << "Query failed: " << query.lastError().text();
+        return members; // Return an empty vector if the query fails
+    }
+
+    // If the query returns at least one row, extract the comission members.
+    if (query.first()) {
+        members.append(query.value("predsedatel").toString());
+        members.append(query.value("post_g_comiss").toString());
+        members.append(query.value("vari_g_comissi").toString());
+        members.append(query.value("podl_g_comiss").toString());
+    } else {
+        qDebug() << "No comission members found for group name: " << groupName;
+    }
+
+    return members;
+}
+
+QVector<QString> DataBaseManager::getStudentData(const QString& studentId) {
+    QVector<QString> result;
+
+    if (!db.open()) {
+        qDebug() << "Error opening database:" << db.lastError().text();
+        return result; // Возвращаем пустой вектор, если не удалось подключиться.
+    }
+
+    // 2. Формирование SQL-запроса
+    QString queryStr = QString(
+        "SELECT "
+        "  s.nzakl, "
+        "  s.date_zakl, "
+        "  s.students_id_prep, "
+        "  lg.group_name, "
+        "  t.dolznost_rod, "
+        "  t.fio_dolz_pri, "
+        "  s.fio_rod, "
+        "  s.tema, "
+        "  s.origin1, "
+        "  s.origin2, "
+        "  s.comment, "
+        "  s.dopusk "
+        "FROM students AS s "
+            "LEFT JOIN teachers AS t ON s.students_id_prep = t.id_prep "
+            "LEFT JOIN last_groups AS lg ON s.students_id_last_group = lg.id_last_group "
+            "WHERE "
+            " s.id_student = :studentId;");
+
+    // 3. Подготовка запроса
+    QSqlQuery query;
+    query.prepare(queryStr);
+    query.bindValue(":studentId", studentId);
+
+    // 4. Выполнение запроса
+    if (!query.exec()) { // !!!!!!!!!1
+        qDebug() << "SQL query failed:" << query.lastError().text();
+        return result; // Возвращаем пустой вектор при ошибке выполнения запроса
+    }
+
+    // 5. Обработка результата (если он есть)
+    if (query.next()) {
+        result.append(query.value(0).toString());  // s.nzakl
+        result.append(query.value(1).toString());  // s.date_zakl
+        result.append(query.value(2).toString());  // s.students_id_prep
+        result.append(query.value(3).toString());  // lg.group_name
+        result.append(query.value(4).toString());  // t.dolznost_rod
+        result.append(query.value(5).toString());  // t.fio_dolz_pri
+        result.append(query.value(6).toString());  // s.fio_rod
+        result.append(query.value(7).toString());  // s.tema
+        result.append(query.value(8).toString());  // s.origin1
+        result.append(query.value(9).toString());  // s.origin2
+        result.append(query.value(10).toString()); // s.comment
+        result.append(query.value(11).toString()); // s.dopusk
+    } else {
+        qDebug() << "No data found for student ID:" << studentId;
+    }
+
+    return result;
+}
+
+QVector<QString> DataBaseManager::getTeacherInfo(const QString& fio) {
+    QVector<QString> result;
+
+    // Проверяем, подключена ли база данных
+    if (!db.isValid()) {
+        qDebug() << "Ошибка: база данных не подключена.";
+        return result; // Возвращаем пустой вектор в случае ошибки
+    }
+
+    // Формируем SQL-запрос
+    QString queryText = "SELECT dolznost_rod, fio_dolz_pri FROM teachers WHERE fio = :fio";
+    QSqlQuery query(db);
+    query.prepare(queryText);
+    query.bindValue(":fio", fio);
+
+    // Выполняем запрос
+    if (!query.exec()) {
+        qDebug() << "Ошибка при выполнении запроса: " << query.lastError().text();
+        qDebug() << "Запрос: " << query.lastQuery();
+        return result; // Возвращаем пустой вектор в случае ошибки
+    }
+
+    // Обрабатываем результат
+    if (query.next()) {
+        result.append(query.value("dolznost_rod").toString());
+        result.append(query.value("fio_dolz_pri").toString());
+    } else {
+        qDebug() << "Преподаватель с ФИО '" << fio << "' не найден.";
+    }
+
+    return result;
+}
+
+QString DataBaseManager::getTeacherDolzn(const QString& fio) {
+    QString result;
+
+    // Проверяем, подключена ли база данных
+    if (!db.isValid()) {
+        qDebug() << "Ошибка: база данных не подключена.";
+        return result; // Возвращаем пустой вектор в случае ошибки
+    }
+
+    // Формируем SQL-запрос
+    QString queryText = "SELECT dolznost FROM teachers WHERE fio = :fio";
+    QSqlQuery query(db);
+    query.prepare(queryText);
+    query.bindValue(":fio", fio);
+
+    // Выполняем запрос
+    if (!query.exec()) {
+        qDebug() << "Ошибка при выполнении запроса: " << query.lastError().text();
+        qDebug() << "Запрос: " << query.lastQuery();
+        return result; // Возвращаем пустой вектор в случае ошибки
+    }
+
+    // Обрабатываем результат
+    if (query.next()) {
+        result = query.value("dolznost").toString();
+    } else {
+        qDebug() << "Преподаватель с ФИО '" << fio << "' не найден.";
+    }
+
+    return result;
+}
+
+QVector<QString> DataBaseManager::getStudentEdit(const QVector<QString>& student) {
+    QVector<QString>nextVec;
+
+    // сбор всех данных для генерации
+    nextVec.append(student[0]); // nzakl v
+    QStringList parts = student[1].split('.'); // date_zakl 2 - 4 v
+    nextVec.append(parts[0]);
+    nextVec.append(parts[1]);
+    nextVec.append(parts[2]);
+
+    QVector<QString>comiss = getComissionMembers(student[3]);
+    nextVec.append(comiss[0]); // predsedatel - fio v
+    nextVec.append(getTeacherDolzn(comiss[0])); // predsedatel - dolznost v
+    nextVec.append(comiss[1]); // post_g_comiss - fio v
+    nextVec.append(getTeacherDolzn(comiss[1])); // post_g_comiss - dolznost v
+    nextVec.append(comiss[2]); // vari_g_comissi - fio v
+    nextVec.append(getTeacherDolzn(comiss[2])); // vari_g_comissi - dolznost v
+
+    nextVec.append(student[6]); // s.fio_rod v
+    nextVec.append(student[3]); // lg.group_name v
+    nextVec.append(student[7]); // s.tema v
+
+    //ркуоводитель
+    QVector<QString>ruk = getTeacherInfo(comiss[2]); // vari_g_comissi - dolznost_rod, fio_dolz_pri v
+    nextVec.append(ruk[0]);
+    nextVec.append(ruk[1]);
+
+    if(student[8] == "0") { nextVec.append("-"); } // s.origin1 v
+    else { nextVec.append(student[8]); }
+
+    if(student[9] == "0") { nextVec.append("-"); } // s.origin2 v
+    else { nextVec.append(student[9]); }
+
+    nextVec.append(student[10]); // s.comment v
+
+    if(student[11] == "+") { nextVec.append("допустить работу к защите"); } // s.dopusk v
+    else { nextVec.append("отправить на доработку"); }
+
+    nextVec.append(nextVec[4]); // predsedatel - fio v
+    nextVec.append(nextVec[6]); // post_g_comiss - fio v
+    nextVec.append(nextVec[8]); //  vari_g_comissi - fio v
+    //nextVec.append(comiss[3]); // podl_g_comiss - fio ?
+
+    return nextVec;
 }

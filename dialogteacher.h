@@ -19,7 +19,7 @@ private slots:
     void on_pb_teacher_clicked();
 
 signals:
-    void sendDataTeacher(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr);
+    void sendDataTeacher(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr, const QString& dolznost_rod);
 
 private:
     Ui::DialogTeacher *ui;

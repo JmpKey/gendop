@@ -131,11 +131,11 @@ void MainWindow::onOpenDialogTeacher() {
     flagd = false;
 }
 
-void MainWindow::receiveDataTeacher(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr)
+void MainWindow::receiveDataTeacher(const QString& fio_t, const QString& dolznost_t, const QString& dolznost_ts, const QString& fio_tpr, const QString& dolznost_rod)
 {
     if(!flagd) { flagd = true; return; }
     QString curDate = QDateTime::currentDateTime().toString("yyyy-MM-dd");
-    db_manager->add_teacher_db_w(fio_t, dolznost_t, dolznost_ts, fio_tpr, curDate);
+    db_manager->add_teacher_db_w(fio_t, dolznost_t, dolznost_ts, fio_tpr, curDate, dolznost_rod);
 }
 
 void MainWindow::on_action_student_triggered() {}
@@ -259,5 +259,28 @@ void MainWindow::receiveDataSearch(const QString& search)
 void MainWindow::on_action_sr_math_triggered()
 {
     show_message(db_manager->calculateAverages());
+}
+
+
+void MainWindow::on_action_gendoc_triggered()
+{
+    QModelIndex index = ui->tableView->currentIndex();
+
+    // Проверяем, что индекс действителен
+    if (!index.isValid()) {
+        QMessageBox::warning(this, "Ошибка", "Выберите строку для генерации.");
+        return;
+    }
+
+    QVariant idValue = model->data(model->index(index.row(), 0));
+
+    // Преобразуем QVariant в QString
+    QString id = idValue.toString();
+
+    // Выводим ID в отладочный вывод
+    qDebug() << "See ID:" << id;
+
+    DocxManager microd;
+    microd.unZipDocxWrite((db_manager->getStudentEdit(db_manager->getStudentData(id))));
 }
 

@@ -21,8 +21,8 @@ DialogTeacher::~DialogTeacher()
 
 void DialogTeacher::on_pb_teacher_clicked()
 {
-    if (ui->le_fio->text() != "" && ui->cb_dolzn->currentText() != "" && ui->le_dolzn_min->text() != "" && ui->le_fio_pr->text() != "") {
-        emit sendDataTeacher(ui->le_fio->text(), ui->cb_dolzn->currentText(), ui->le_dolzn_min->text(), ui->le_fio_pr->text());
+    if (ui->le_fio->text() != "" && ui->cb_dolzn->currentText() != "" && ui->le_dolzn_min->text() != "" && ui->le_fio_pr->text() != "" && ui->le_dolzn_rod->text() != "") {
+        emit sendDataTeacher(ui->le_fio->text(), ui->cb_dolzn->currentText(), ui->le_dolzn_min->text(), ui->le_fio_pr->text(), ui->le_dolzn_rod->text());
         accept();
     }
 }
