@@ -2,15 +2,17 @@
 Document generator for making decisions on establishing the fact of borrowing
 
 # Build
-Install Qt5:
+Install Qt5 and begin:
 ```
 # apt install qt5 qt5-dev build-essential
 $ cd gendop/build/template
 $ chmod +x unzipf.sh
 $ chmod +x zipf.sh
-$ qmake gendop.pro
+$ cd ../
+$ qmake ../gendop.pro
 $ make
-$ sudo make install
+$ make install INSTALL_ROOT=$HOME/gendop_app
+$ cp -r conf db in template ~/gendop_app/opt/gendop/bin/
 ```
 
 # Configuration
