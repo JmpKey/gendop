@@ -98,6 +98,10 @@ void DocxManager::callSh(const QString& fileName, const QString& scriptPath) {
     qDebug() << "Вывод:" << output;
     if (!errorOutput.isEmpty()) {
         qDebug() << "Ошибка:" << errorOutput;
+        //process.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
+        //process.start("bash", QStringList() << "-c" << scriptPath << fileName);
+        //QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        //qDebug() << "PATH:" << env.value("PATH");
     }
 }
 
@@ -146,3 +150,4 @@ void DocxManager::unZipDocxWrite(const QVector<QString>& lze_dmitriy) {
         qDebug() << "Не удалось рекурсивно удалить директорию: " << fileName;
     }
 }
+

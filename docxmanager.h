@@ -21,6 +21,7 @@ public:
     QString getUniqueFileName(const QString& basePath, const QString& fileName);
     QString copyFile(const QString& sourcePath, const QString& destinationPath);
     void callSh(const QString& fileName, const QString& scriptPath);
+    void callShConv(const QString& fileName, const QString& scriptPath);
 };
 
 #endif // DOCXMANAGER_H

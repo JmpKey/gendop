@@ -49,6 +49,8 @@ private slots:
 
     void on_action_gendoc_triggered();
 
+    void on_action_update_triggered();
+
 private:
     Ui::MainWindow *ui;
     QWidget* widget;

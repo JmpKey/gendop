@@ -60,6 +60,7 @@
     <addaction name="action_del_obj"/>
     <addaction name="action_search"/>
     <addaction name="action_sr_math"/>
+    <addaction name="action_update"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -108,6 +109,11 @@
   <action name="action_sr_math">
    <property name="text">
     <string>Среднее по группе</string>
+   </property>
+  </action>
+  <action name="action_update">
+   <property name="text">
+    <string>Обновить</string>
    </property>
   </action>
  </widget>

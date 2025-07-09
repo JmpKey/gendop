@@ -170,6 +170,7 @@ void MainWindow::receiveDataStudent(const QString& fio_s, const QString& fio_rod
 {
     if(!flagd) { flagd = true; return; }
     db_manager->add_student_db_w(fio_s, fio_rod, orig_1, orig_2, tema, dopusk, comment, nzakl, date_zakl);
+    show_model();
 }
 
 void MainWindow::on_action_del_obj_triggered()
@@ -282,5 +283,11 @@ void MainWindow::on_action_gendoc_triggered()
 
     DocxManager microd;
     microd.unZipDocxWrite((db_manager->getStudentEdit(db_manager->getStudentData(id))));
+}
+
+
+void MainWindow::on_action_update_triggered()
+{
+    show_model();
 }
 
