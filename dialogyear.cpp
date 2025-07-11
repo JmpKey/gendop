@@ -1,7 +1,7 @@
 #include "dialogyear.h"
 #include "ui_dialogyear.h"
 
-DialogYear::DialogYear(QWidget *parent)
+DialogYear::DialogYear(QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::DialogYear)
 {

@@ -98,14 +98,74 @@ void DocxManager::callSh(const QString& fileName, const QString& scriptPath) {
     qDebug() << "Вывод:" << output;
     if (!errorOutput.isEmpty()) {
         qDebug() << "Ошибка:" << errorOutput;
-        //process.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
-        //process.start("bash", QStringList() << "-c" << scriptPath << fileName);
-        //QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-        //qDebug() << "PATH:" << env.value("PATH");
     }
 }
 
-void DocxManager::unZipDocxWrite(const QVector<QString>& lze_dmitriy) {
+void DocxManager::copyFileToDirU(const QString& sourceDir, const QString& destDir, const QString& newName) {
+    QDir dir(sourceDir);
+    if (!dir.exists()) {
+        qDebug() << "Source directory does not exist.";
+        return;
+    }
+
+    // Установим фильтры для нужных файлов
+    QStringList filters;
+    filters << "*.docx" << "*.odt" << "*.pdf";
+    dir.setNameFilters(filters);
+    dir.setFilter(QDir::Files);
+
+    QFileInfoList fileList = dir.entryInfoList();
+    for (const QFileInfo& fileInfo : fileList) {
+        QString fileExtension = fileInfo.suffix(); // Получаем расширение файла
+        QString destFilePath = QDir(destDir).filePath(newName + "." + fileExtension); // Создаем новое имя файла
+
+        if (QFile::copy(fileInfo.filePath(), destFilePath)) {
+            qDebug() << "Copied:" << fileInfo.filePath() << "to" << destFilePath;
+        } else {
+            qDebug() << "Failed to copy:" << fileInfo.filePath() << "to" << destFilePath;
+        }
+    }
+}
+
+void DocxManager::removeFileOnDir(const QString& directoryPath) {
+    QDir directory(directoryPath);
+
+    if (!directory.exists()) {
+        qDebug() << "Директория не существует: " << directoryPath;
+        return;
+    }
+
+    QDirIterator it(directoryPath, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+
+    while (it.hasNext()) {
+        QString filePath = it.next();
+        QFileInfo fileInfo(filePath);
+        QString fileExtension = fileInfo.suffix().toLower(); // Получаем расширение в нижнем регистре
+
+        if (fileExtension == "docx" || fileExtension == "odt" || fileExtension == "pdf") {
+            QFile file(filePath);
+            if (file.remove()) {
+                qDebug() << "Удален файл: " << filePath;
+            } else {
+                qDebug() << "Не удалось удалить файл: " << filePath << " Ошибка: " << file.errorString();
+            }
+        }
+    }
+}
+
+void DocxManager::removeTmpDir(const QString& tmpFile) {
+    // удаление директории
+    QDir dir("template/" + tmpFile);
+    if (!dir.exists()) {
+        qDebug() << "Директория не существует: " << tmpFile;
+    }
+
+    if (!dir.removeRecursively()) {
+        qDebug() << "Не удалось рекурсивно удалить директорию: " << tmpFile;
+    }
+}
+
+void DocxManager::unZipDocxWrite(const QVector<QString>& lze_dmitriy, const QString& userDir) {
     QString fileNameToCopy = "tem.docx";
 
     QString sourceFilePath = QDir("in/").filePath(fileNameToCopy);
@@ -139,15 +199,11 @@ void DocxManager::unZipDocxWrite(const QVector<QString>& lze_dmitriy) {
 
     // собираем docx
     callSh(fileName, "./zipf.sh");
+    callSh(fileName, "./convert.sh");
 
-    // удаление директории
-    QDir dir("template/" + fileName);
-    if (!dir.exists()) {
-        qDebug() << "Директория не существует: " << fileName;
-    }
+    copyFileToDirU("template/", userDir, lze_dmitriy[10]);
+    removeFileOnDir("template/");
 
-    if (!dir.removeRecursively()) {
-        qDebug() << "Не удалось рекурсивно удалить директорию: " << fileName;
-    }
+    removeTmpDir(fileName);
 }
 

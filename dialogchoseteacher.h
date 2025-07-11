@@ -12,7 +12,7 @@ class DialogChoseTeacher : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogChoseTeacher(const QStringList &teachers, QWidget *parent = nullptr);
+    explicit DialogChoseTeacher(const QStringList& teachers, QWidget* parent = nullptr);
     ~DialogChoseTeacher();
 
 private slots:
@@ -22,7 +22,7 @@ signals:
     void sendDataChoseTeacher(const QString& id_c_teacher);
 
 private:
-    Ui::DialogChoseTeacher *ui;
+    Ui::DialogChoseTeacher* ui;
 };
 
 #endif // DIALOGCHOSETEACHER_H

@@ -12,7 +12,7 @@ class DialogYear : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogYear(QWidget *parent = nullptr);
+    explicit DialogYear(QWidget* parent = nullptr);
     ~DialogYear();
 
 private slots:
@@ -22,7 +22,7 @@ signals:
     void sendDataYear(const QString& year, const QString& years);
 
 private:
-    Ui::DialogYear *ui;
+    Ui::DialogYear* ui;
 };
 
 #endif // DIALOGYEAR_H

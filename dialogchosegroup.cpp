@@ -1,7 +1,7 @@
 #include "dialogchosegroup.h"
 #include "ui_dialogchosegroup.h"
 
-DialogChoseGroup::DialogChoseGroup(const QStringList &groups, QWidget *parent)
+DialogChoseGroup::DialogChoseGroup(const QStringList& groups, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::DialogChoseGroup)
 {
@@ -9,7 +9,7 @@ DialogChoseGroup::DialogChoseGroup(const QStringList &groups, QWidget *parent)
 
     connect(ui->pb_c_group, &QPushButton::clicked, this, &DialogChoseGroup::on_pb_c_group_clicked);
 
-    for (const QString &group : groups) {
+    for (const QString& group : groups) {
         ui->cb_group->addItem(group);
     }
 }

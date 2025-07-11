@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -282,12 +282,48 @@ void MainWindow::on_action_gendoc_triggered()
     qDebug() << "See ID:" << id;
 
     DocxManager microd;
-    microd.unZipDocxWrite((db_manager->getStudentEdit(db_manager->getStudentData(id))));
+    QString directory = QFileDialog::getExistingDirectory(this, "Выберите директорию", "", QFileDialog::ShowDirsOnly);
+    microd.unZipDocxWrite(db_manager->getStudentEdit(db_manager->getStudentData(id)), directory);
 }
 
 
 void MainWindow::on_action_update_triggered()
 {
     show_model();
+}
+
+
+void MainWindow::on_action_gendoc_all_triggered()
+{
+    if (!model) {
+        return;
+    }
+
+    QString directory = QFileDialog::getExistingDirectory(this, "Выберите директорию для сохранения документов", "", QFileDialog::ShowDirsOnly);
+
+    if (directory.isEmpty()) {
+        return;
+    }
+
+    DocxManager microd;
+
+    for (int row = 0; row < model->rowCount(); ++row) {
+        QModelIndex idIndex = model->index(row, 0);
+
+        if (idIndex.isValid()) {
+            QVariant idValue = model->data(idIndex);
+            QString id = idValue.toString();
+
+            qDebug() << "Processing ID:" << id;
+
+            try {
+                microd.unZipDocxWrite(db_manager->getStudentEdit(db_manager->getStudentData(id)), directory);
+            } catch (const std::exception& e) {
+                qDebug() << "Error processing ID " << id << ": " << e.what();
+            }
+        } else {
+            qDebug() << "Invalid index at row " << row;
+        }
+    }
 }
 

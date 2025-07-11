@@ -1,7 +1,7 @@
 #include "dialoggroup.h"
 #include "ui_dialoggroup.h"
 
-DialogGroup::DialogGroup(QWidget *parent)
+DialogGroup::DialogGroup(QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::DialogGroup)
 {

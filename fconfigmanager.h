@@ -3,7 +3,6 @@
 
 #include <QVector>
 #include <QFile>
-
 #include <QTextStream>
 #include <QString>
 #include <QStringList>
@@ -12,7 +11,7 @@
 class FConfigManager
 {
 public:
-    FConfigManager(const QString &filePath);
+    FConfigManager(const QString& filePath);
 
     QVector<QString> readConfig();
 

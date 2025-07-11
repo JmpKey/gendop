@@ -753,7 +753,10 @@ QVector<QString> DataBaseManager::getStudentEdit(const QVector<QString>& student
     nextVec.append(student[10]); // s.comment v
 
     if(student[11] == "+") { nextVec.append("допустить работу к защите"); } // s.dopusk v
-    else { nextVec.append("отправить на доработку"); }
+    else {
+        if(student[11] == "-") { nextVec.append("не допускать к защите"); }
+        else {  nextVec.append("отправить на доработку"); }
+    }
 
     nextVec.append(nextVec[4]); // predsedatel - fio v
     nextVec.append(nextVec[6]); // post_g_comiss - fio v

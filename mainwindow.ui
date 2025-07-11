@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>gendop</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="gridLayoutWidget">
@@ -57,6 +57,7 @@
      <string>Выполнить</string>
     </property>
     <addaction name="action_gendoc"/>
+    <addaction name="action_gendoc_all"/>
     <addaction name="action_del_obj"/>
     <addaction name="action_search"/>
     <addaction name="action_sr_math"/>
@@ -114,6 +115,11 @@
   <action name="action_update">
    <property name="text">
     <string>Обновить</string>
+   </property>
+  </action>
+  <action name="action_gendoc_all">
+   <property name="text">
+    <string>Создать документы</string>
    </property>
   </action>
  </widget>

@@ -1,6 +1,6 @@
 #include "fconfigmanager.h"
 
-FConfigManager::FConfigManager(const QString &filePath) : filePath(filePath) {}
+FConfigManager::FConfigManager(const QString& filePath) : filePath(filePath) {}
 
 QVector<QString> FConfigManager::readConfig() {
     QVector<QString> result;

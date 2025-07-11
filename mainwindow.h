@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include <adaptation.h>
 
@@ -17,7 +18,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -28,6 +29,10 @@ private slots:
     void on_action_del_obj_triggered();
     void on_action_comiss_triggered();
     void on_action_search_triggered();
+    void on_action_sr_math_triggered();
+    void on_action_gendoc_triggered();
+    void on_action_update_triggered();
+    void on_action_gendoc_all_triggered();
 
     // user slots:
     void onOpenDialogYear();
@@ -45,14 +50,8 @@ private slots:
     void onOpenDialogSearch();
     void receiveDataSearch(const QString& search);
 
-    void on_action_sr_math_triggered();
-
-    void on_action_gendoc_triggered();
-
-    void on_action_update_triggered();
-
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
     QWidget* widget;
     QSqlQueryModel* model = nullptr;
     DataBaseManager* db_manager;

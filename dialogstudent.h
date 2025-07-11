@@ -12,7 +12,7 @@ class DialogStudent : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogStudent(QWidget *parent = nullptr);
+    explicit DialogStudent(QWidget* parent = nullptr);
     ~DialogStudent();
 
 private slots:
@@ -22,7 +22,7 @@ signals:
     void sendDataStudent(const QString& fio_s, const QString& fio_rod, const QString& orig_1, const QString& orig_2, const QString& tema, const QString& dopusk, const QString& comment, const QString& nzakl, const QString& date_zakl);
 
 private:
-    Ui::DialogStudent *ui;
+    Ui::DialogStudent* ui;
 };
 
 #endif // DIALOGSTUDENT_H

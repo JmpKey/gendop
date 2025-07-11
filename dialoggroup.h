@@ -12,7 +12,7 @@ class DialogGroup : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogGroup(QWidget *parent = nullptr);
+    explicit DialogGroup(QWidget* parent = nullptr);
     ~DialogGroup();
 
 private slots:
@@ -22,7 +22,7 @@ signals:
     void sendDataGroup(const QString& year, const QString& group_name);
 
 private:
-    Ui::DialogGroup *ui;
+    Ui::DialogGroup* ui;
 };
 
 #endif // DIALOGGROUP_H

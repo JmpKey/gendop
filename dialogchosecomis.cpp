@@ -1,7 +1,7 @@
 #include "dialogchosecomis.h"
 #include "ui_dialogchosecomis.h"
 
-DialogChoseComis::DialogChoseComis(const QStringList &years, const QStringList &teachers, QWidget *parent)
+DialogChoseComis::DialogChoseComis(const QStringList& years, const QStringList& teachers, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::DialogChoseComis)
 {
@@ -9,11 +9,11 @@ DialogChoseComis::DialogChoseComis(const QStringList &years, const QStringList &
 
     connect(ui->pb_comis, &QPushButton::clicked, this, &DialogChoseComis::on_pb_comis_clicked);
 
-    for (const QString &year : years) {
+    for (const QString& year : years) {
         ui->cb_year->addItem(year);
     }
 
-    for (const QString &teacher : teachers) {
+    for (const QString& teacher : teachers) {
         ui->cb_ruk->addItem(teacher);
     }
 }

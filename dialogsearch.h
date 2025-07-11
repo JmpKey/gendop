@@ -12,7 +12,7 @@ class DialogSearch : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogSearch(QWidget *parent = nullptr);
+    explicit DialogSearch(QWidget* parent = nullptr);
     ~DialogSearch();
 
 private slots:
@@ -22,7 +22,7 @@ signals:
     void sendDataSearch(const QString& search);
 
 private:
-    Ui::DialogSearch *ui;
+    Ui::DialogSearch* ui;
 };
 
 #endif // DIALOGSEARCH_H

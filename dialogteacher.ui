@@ -92,7 +92,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>ФИО и дол (р. п)</string>
+    <string>ФИО (р. п)</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pb_teacher">

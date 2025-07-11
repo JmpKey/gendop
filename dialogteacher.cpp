@@ -1,7 +1,7 @@
 #include "dialogteacher.h"
 #include "ui_dialogteacher.h"
 
-DialogTeacher::DialogTeacher(const QString &dolzn1, const QString &dolzn2, const QString &dolzn3, QWidget *parent)
+DialogTeacher::DialogTeacher(const QString& dolzn1, const QString& dolzn2, const QString& dolzn3, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::DialogTeacher)
 {

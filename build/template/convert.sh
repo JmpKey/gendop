@@ -18,7 +18,7 @@ output_odt="$base_name.odt"
 output_pdf="$base_name.pdf"
 
 # Конвертируем в ODT
-loffice --headless --convert-to odt "$input_file" --outdir "$(dirname "$input_file")"
+libreoffice --headless --convert-to odt "$input_file" --outdir "$(dirname "$input_file")"
 
 # Проверяем, успешна ли конвертация ODT
 if [ $? -ne 0 ]; then
@@ -27,7 +27,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Конвертируем в PDF, используя только полученный ODT
-loffice --headless --convert-to pdf "$output_odt" --outdir "$(dirname "$input_file")"
+libreoffice --headless --convert-to pdf "$output_odt" --outdir "$(dirname "$input_file")"
 
 # Проверяем, успешна ли конвертация DOCX
 if [ $? -ne 0 ]; then

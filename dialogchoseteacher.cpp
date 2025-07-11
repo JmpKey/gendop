@@ -1,7 +1,7 @@
 #include "dialogchoseteacher.h"
 #include "ui_dialogchoseteacher.h"
 
-DialogChoseTeacher::DialogChoseTeacher(const QStringList &teachers, QWidget *parent)
+DialogChoseTeacher::DialogChoseTeacher(const QStringList& teachers, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::DialogChoseTeacher)
 {
@@ -9,7 +9,7 @@ DialogChoseTeacher::DialogChoseTeacher(const QStringList &teachers, QWidget *par
 
     connect(ui->pb_c_teacher, &QPushButton::clicked, this, &DialogChoseTeacher::on_pb_c_teacher_clicked);
 
-    for (const QString &teacher : teachers) {
+    for (const QString& teacher : teachers) {
         ui->cb_teacher->addItem(teacher);
     }
 }
