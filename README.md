@@ -2,25 +2,16 @@
 Document generator for making decisions on establishing the fact of borrowing
 
 # Build
-1. Install if not zip on Deb:
-```
-# apt install zip unzip
-```
-Or RPM:
-```
-# dnf install zip unzip
-```
-2. Install Qt5:
+1. Install Qt5:
 Deb:
 ```
-# apt install qt5 qt5-dev build-essential
+# apt install qtbase5-dev zip unzip
 ```
 RPM:
 ```
-dnf install qt5 qt5-dev
-dnf groupinstall "Development Tools"
+dnf install qt5-qtbase-devel zip unzip
 ```
-3. Begin:
+2. Begin:
 ```
 $ cd gendop/build/template
 $ chmod +x unzipf.sh
