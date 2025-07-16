@@ -2,6 +2,7 @@
 #define DIALOGCHOSECOMIS_H
 
 #include <QDialog>
+#include <QDebug>
 
 namespace Ui {
 class DialogChoseComis;

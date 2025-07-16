@@ -2,6 +2,7 @@
 #define DIALOGYEAR_H
 
 #include <QDialog>
+#include <QDebug>
 
 namespace Ui {
 class DialogYear;

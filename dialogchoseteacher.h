@@ -2,6 +2,7 @@
 #define DIALOGCHOSETEACHER_H
 
 #include <QDialog>
+#include <QDebug>
 
 namespace Ui {
 class DialogChoseTeacher;
